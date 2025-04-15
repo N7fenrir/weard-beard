@@ -3,11 +3,10 @@ use chrono::{DateTime, Utc};
 use rand::{rng as ThreadRng, Rng};
 use std::f64::consts::PI;
 use serde::Serialize;
-use tokio::sync::mpsc::{Receiver, Sender};
+use tokio::sync::mpsc::{Sender};
 use tokio::task::JoinHandle;
 use tokio::time::{interval, Instant};
 use uuid::Uuid;
-use crate::sensors;
 
 #[derive(Debug, Serialize)]
 pub struct SensorReading {
@@ -112,21 +111,4 @@ pub fn spawn_sensor_tasks(
     drop(channel_sender);
     println!("All sensor tasks spawned.");
     task_handles
-}
-
-
-/// Simple task to receive sensor readings and print them as JSON.
-pub async fn print_readings(mut output_receiver: Receiver<sensors::SensorReading>) {
-    println!("[Printer Task] Waiting for sensor readings...");
-    while let Some(reading) = output_receiver.recv().await {
-        match serde_json::to_string(&reading) {
-            Ok(json_output) => {
-                // replace with rabbitmq push
-                println!("{}", json_output);
-            }
-            Err(e) => {
-                eprintln!("[Printer Task] Error serializing reading to JSON: {:?}", e);
-            }
-        }
-    }
 }

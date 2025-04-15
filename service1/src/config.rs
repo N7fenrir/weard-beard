@@ -1,6 +1,7 @@
 use serde::Serialize;
 use std::time::Duration;
 use uuid::Uuid;
+use std::env;
 
 #[derive(Debug, Clone, Copy, Serialize)]
 pub enum SensorType { Temperature, Humidity, Pressure }
@@ -13,6 +14,25 @@ impl std::fmt::Display for SensorType {
         }
     }
 }
+
+#[derive(Debug, Clone)]
+pub struct AppConfig {
+    pub amqp_addr: String,
+    pub amqp_queue: String,
+}
+
+/// Reads configuration from environment variables or uses defaults.
+pub fn read_configuration() -> AppConfig {
+    let default_amqp_addr = "amqp://guest:guest@localhost:5672/%2f".to_string();
+    let default_queue_name = "sensor_queue".to_string();
+    let amqp_addr = env::var("AMQP_ADDR").unwrap_or(default_amqp_addr);
+    let amqp_queue = env::var("AMQP_QUEUE").unwrap_or(default_queue_name);
+    println!("Configuration loaded:");
+    println!("  AMQP Address: {}", amqp_addr);
+    println!("  AMQP Queue:   {}", amqp_queue);
+    AppConfig { amqp_addr, amqp_queue }
+}
+
 
 #[derive(Debug, Clone)]
 pub struct Sensor {
