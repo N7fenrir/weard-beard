@@ -1,0 +1,6 @@
+.idea
+target
+.vscode
+*/service2.egg*
+*__pycache__
+.venv
