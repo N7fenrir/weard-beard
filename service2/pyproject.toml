@@ -3,7 +3,7 @@ name = "service2"
 version = "0.1.0"
 description = "Python service to consume sensor data, calculate stats, and provide CLI."
 readme = "README.md"
-requires-python = ">=3.12"
+requires-python = ">=3.09"
 dependencies = [
     "aio-pika>=9,<10",
 ]
@@ -13,8 +13,11 @@ authors = [
 ]
 
 [project.scripts]
-recieve = "main:start"
+recieve = "src.main:start"
 
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+py-modules = ["src", "helpers"]
