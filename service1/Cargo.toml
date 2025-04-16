@@ -11,3 +11,5 @@ rand = "0.9"
 uuid = { version = "1", features = ["v4", "serde"] }
 chrono = { version = "0.4", features = ["serde"] }
 lapin = "2.5.3"
+tokio-stream = "0.1.17"
+futures = "0.3.31"
