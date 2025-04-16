@@ -1,24 +1,17 @@
-# ---- Builder Stage ----
-
-FROM rust:1.77 as builder
-LABEL authors="vighn"
+FROM rust:latest as builder
 
 WORKDIR /usr/src/app
-COPY Cargo.toml Cargo.lock ./
+COPY . .
 
-RUN cargo build --release --locked --target-dir /usr/src/target
-RUN rm -rf /usr/src/target/release/deps/sensor_publisher*
+RUN cargo build --release
 
-COPY src ./src
+FROM ubuntu:22.04
 
-RUN cargo build --release --locked --target-dir /usr/src/target
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
-# ---- Runtime Stage ----
+COPY --from=builder /usr/src/app/target/release/service1 /usr/local/bin/app
 
-FROM debian:stable-slim
-
-WORKDIR /app
-
-COPY --from=builder /usr/src/app/target/release/sensor_publisher /usr/local/bin/sensor_publisher
-
-CMD ["sensor_publisher"]
+ENTRYPOINT ["app"]

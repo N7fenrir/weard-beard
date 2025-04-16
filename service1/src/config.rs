@@ -23,7 +23,7 @@ pub struct AppConfig {
 
 /// Reads configuration from environment variables or uses defaults.
 pub fn read_configuration() -> AppConfig {
-    let default_amqp_addr = "amqp://guest:guest@localhost:5672/%2f".to_string();
+    let default_amqp_addr = "amqp://guest:guest@rabbitmq:5672/%2f".to_string();
     let default_queue_name = "sensor_queue".to_string();
     let amqp_addr = env::var("AMQP_ADDR").unwrap_or(default_amqp_addr);
     let amqp_queue = env::var("AMQP_QUEUE").unwrap_or(default_queue_name);
